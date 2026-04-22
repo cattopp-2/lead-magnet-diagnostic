@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Isn't Your Lead Magnet Converting?</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: #f4f4f2;
+      color: #444;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .quiz-header {
+      background: #1D9ABC;
+      padding: 28px 24px 0;
+      text-align: center;
+    }
+
+    .quiz-header__label {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .quiz-header__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 3.5vw, 28px);
+      font-weight: 400;
+      color: #ffffff;
+      margin-bottom: 24px;
+      line-height: 1.3;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-bar-wrap {
+      background: rgba(0,0,0,0.15);
+      height: 5px;
+      width: 100%;
+    }
+
+    .progress-bar-fill {
+      background: #e8a020;
+      height: 5px;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .quiz-body {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 44px 20px 72px;
+    }
+
+    /* ── STEP ── */
+    .step {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── STEP COUNTER ── */
+    .step-counter {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #1D9ABC;
+      margin-bottom: 14px;
+    }
+
+    /* ── QUESTION ── */
+    .question-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(21px, 3.5vw, 27px);
+      font-weight: 400;
+      line-height: 1.35;
+      color: #2d2d2d;
+      margin-bottom: 28px;
+    }
+
+    /* ── ANSWER CARDS ── */
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .answer-btn {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #fff;
+      border: 2px solid #e8e8e4;
+      border-radius: 6px;
+      padding: 16px 20px;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Lato', sans-serif;
+      font-size: 16px;
+      color: #444;
+      line-height: 1.5;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+      width: 100%;
+    }
+
+    .answer-btn:hover {
+      border-color: #1D9ABC;
+      background: #f0f9fc;
+      transform: translateX(3px);
+    }
+
+    .answer-btn.selected {
+      border-color: #1D9ABC;
+      background: #1D9ABC;
+      color: #fff;
+    }
+
+    .answer-btn.selected .answer-letter {
+      background: #fff;
+      color: #1D9ABC;
+    }
+
+    .answer-letter {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: #e8a020;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .quiz-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 28px;
+      gap: 12px;
+    }
+
+    .btn-back {
+      background: none;
+      border: 2px solid #d0d0d0;
+      border-radius: 4px;
+      color: #888;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 13px 24px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease;
+      line-height: 1;
+    }
+
+    .btn-back:hover {
+      border-color: #999;
+      color: #555;
+    }
+
+    .btn-next {
+      background: #e8a020;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 15px 36px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+      line-height: 1;
+    }
+
+    .btn-next:hover:not(:disabled) {
+      background: #c8881a;
+      transform: translateY(-1px);
+    }
+
+    .btn-next:disabled {
+      background: #e0e0e0;
+      color: #aaa;
+      cursor: not-allowed;
+    }
+
+    /* ── OPT-IN STEP ── */
+    .optin-intro {
+      font-family: 'Lato', sans-serif;
+      font-size: 18px;
+      color: #444;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .optin-intro p + p {
+      margin-top: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      height: 50px;
+      border: 2px solid #e8e8e4;
+      border-radius: 5px;
+      padding: 0 16px;
+      font-family: 'Lato', sans-serif;
+      font-size: 16px;
+      color: #2d2d2d;
+      background: #fff;
+      transition: border-color 0.15s ease;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #1D9ABC;
+    }
+
+    .form-group input.error {
+      border-color: #e04040;
+    }
+
+    .error-msg {
+      font-size: 13px;
+      color: #e04040;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: #e8a020;
+      color: #fff;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 17px 40px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+      margin-top: 8px;
+      line-height: 1;
+    }
+
+    .btn-primary:hover {
+      background: #c8881a;
+      transform: translateY(-1px);
+    }
+
+    .privacy-note {
+      font-size: 14px;
+      color: #999;
+      margin-top: 14px;
+      font-style: italic;
+    }
+
+    /* ── LOADING STEP ── */
+    .loading-step {
+      text-align: center;
+      padding: 48px 0;
+    }
+
+    .loading-step__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 400;
+      color: #2d2d2d;
+      margin-bottom: 14px;
+    }
+
+    .loading-step__sub {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #e8e8e4;
+      border-top-color: #1D9ABC;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .quiz-body { padding: 32px 16px 60px; }
+      .btn-primary { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="quiz-header">
+    <p class="quiz-header__label">Free diagnostic</p>
+    <h1 class="quiz-header__title">Why Isn't Your Lead Magnet Converting?</h1>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ BODY -->
+  <div class="quiz-body">
+
+    <!-- ── STEP 0: OPT-IN ── -->
+    <div class="step active" id="step-0">
+      <p class="question-text" style="margin-bottom: 20px;">Answer 7 quick questions and find out exactly what's getting in the way — and what to fix first.</p>
+      <div class="form-group">
+        <label for="firstName">First name</label>
+        <input type="text" id="firstName" placeholder="Your first name" autocomplete="given-name" />
+        <p class="error-msg" id="firstNameError">Please enter your first name</p>
+      </div>
+      <div class="form-group">
+        <label for="emailInput">Email address</label>
+        <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" />
+        <p class="error-msg" id="emailError">Please enter a valid email address</p>
+      </div>
+      <input type="hidden" id="quizResultField" name="lead-magnet-diagnostic-result" value="" />
+      <button class="btn-primary" onclick="startQuiz()">Find out what's going wrong &rarr;</button>
+      <p class="privacy-note">No spam. Just your result. Unsubscribe any time.</p>
+    </div>
+
+    <!-- ── STEP 1 ── -->
+    <div class="step" id="step-1">
+      <p class="step-counter">Question 1 of 7</p>
+      <p class="question-text">Who did you have in mind when you created your lead magnet?</p>
+      <div class="answers">
+        <button class="answer-btn" onclick="selectAnswer(1,'A',this)"><span class="answer-letter">A</span>A very specific type of person at a specific stage in their business or life</button>
+        <button class="answer-btn" onclick="selectAnswer(1,'B',this)"><span class="answer-letter">B</span>Broadly, anyone who might be interested in what I do</button>
+        <button class="answer-btn" onclick="selectAnswer(1,'C',this)"><span class="answer-letter">C</span>Honestly, I was thinking about what I could create, not who it was for</button>
+        <button class="answer-btn" onclick="selectAnswer(1,'D',this)"><span class="answer-letter">D</span>My existing audience — people who already follow me</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 2 ── -->
+    <div class="step" id="step-2">
+      <p class="step-counter">Question 2 of 7</p>
+      <p class="question-text">How does your lead magnet connect to your paid offer?</p>
+      <div class="answers">
+        <button class="answer-btn" onclick="selectAnswer(2,'A',this)"><span class="answer-letter">A</span>It's a direct stepping stone — it solves one part of the problem my paid offer solves completely</button>
+        <button class="answer-btn" onclick="selectAnswer(2,'B',this)"><span class="answer-letter">B</span>It's related, but the link isn't super explicit</button>
+        <button class="answer-btn" onclick="selectAnswer(2,'C',this)"><span class="answer-letter">C</span>It's a bit of a different topic, but I thought it would get more sign-ups</button>
+        <button class="answer-btn" onclick="selectAnswer(2,'D',this)"><span class="answer-letter">D</span>I'm not totally sure — I haven't mapped it out properly</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3 ── -->
+    <div class="step" id="step-3">
+      <p class="step-counter">Question 3 of 7</p>
+      <p class="question-text">What format is your lead magnet in?</p>
+      <div class="answers">
+        <button class="answer-btn" onclick="selectAnswer(3,'A',this)"><span class="answer-letter">A</span>A PDF guide, checklist, or ebook</button>
+        <button class="answer-btn" onclick="selectAnswer(3,'B',this)"><span class="answer-letter">B</span>A video or mini training</button>
+        <button class="answer-btn" onclick="selectAnswer(3,'C',this)"><span class="answer-letter">C</span>A template or swipe file</button>
+        <button class="answer-btn" onclick="selectAnswer(3,'D',this)"><span class="answer-letter">D</span>A quiz, assessment, or interactive tool</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 4 ── -->
+    <div class="step" id="step-4">
+      <p class="step-counter">Question 4 of 7</p>
+      <p class="question-text">What happens immediately after someone signs up?</p>
+      <div class="answers">
+        <button class="answer-btn" onclick="selectAnswer(4,'A',this)"><span class="answer-letter">A</span>They get the lead magnet delivered and a welcome email sequence kicks in</button>
+        <button class="answer-btn" onclick="selectAnswer(4,'B',this)"><span class="answer-letter">B</span>They get the lead magnet, but there's no real email sequence after that</button>
+        <button class="answer-btn" onclick="selectAnswer(4,'C',this)"><span class="answer-letter">C</span>They get the lead magnet. I email my list occasionally but it's not automated</button>
+        <button class="answer-btn" onclick="selectAnswer(4,'D',this)"><span class="answer-letter">D</span>Honestly, the delivery is a bit patchy — I'm not sure it always works properly</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 5 ── -->
+    <div class="step" id="step-5">
+      <p class="step-counter">Question 5 of 7</p>
+      <p class="question-text">When you look at your sign-up page, what does the traffic look like?</p>
+      <div class="answers">
+        <button class="answer-btn" onclick="selectAnswer(5,'A',this)"><span class="answer-letter">A</span>Good traffic, low conversions — people are landing but not signing up</button>
+        <button class="answer-btn" onclick="selectAnswer(5,'B',this)"><span class="answer-letter">B</span>Low traffic — not many people are even finding the page</button>
+        <button class="answer-btn" onclick="selectAnswer(5,'C',this)"><span class="answer-letter">C</span>Decent sign-ups, but nobody's buying anything afterwards</button>
+        <button class="answer-btn" onclick="selectAnswer(5,'D',this)"><span class="answer-letter">D</span>I don't really have a clear picture of the numbers</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 6 ── -->
+    <div class="step" id="step-6">
+      <p class="step-counter">Question 6 of 7</p>
+      <p class="question-text">How would you describe the people who do sign up?</p>
+      <div class="answers">
+        <button class="answer-btn" onclick="selectAnswer(6,'A',this)"><span class="answer-letter">A</span>They're exactly who I want to work with</button>
+        <button class="answer-btn" onclick="selectAnswer(6,'B',this)"><span class="answer-letter">B</span>A mixed bag — some good fits, a lot of people who'll never buy</button>
+        <button class="answer-btn" onclick="selectAnswer(6,'C',this)"><span class="answer-letter">C</span>I'm not sure — I don't hear from them much after they sign up</button>
+        <button class="answer-btn" onclick="selectAnswer(6,'D',this)"><span class="answer-letter">D</span>Mostly people who like free stuff but aren't serious buyers</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 7 ── -->
+    <div class="step" id="step-7">
+      <p class="step-counter">Question 7 of 7</p>
+      <p class="question-text">When someone gets your lead magnet, what are they supposed to do next?</p>
+      <div class="answers">
+        <button class="answer-btn" onclick="selectAnswer(7,'A',this)"><span class="answer-letter">A</span>There's a clear next step — a specific offer, a call to book, a product to buy</button>
+        <button class="answer-btn" onclick="selectAnswer(7,'B',this)"><span class="answer-letter">B</span>Get value from it, and hopefully reach out when they're ready</button>
+        <button class="answer-btn" onclick="selectAnswer(7,'C',this)"><span class="answer-letter">C</span>Join my email list and hear from me over time</button>
+        <button class="answer-btn" onclick="selectAnswer(7,'D',this)"><span class="answer-letter">D</span>Honestly, I haven't been that intentional about it</button>
+      </div>
+    </div>
+
+    <!-- ── LOADING STEP ── -->
+    <div class="step" id="step-loading">
+      <div class="loading-step">
+        <p class="loading-step__title">Analysing your answers&hellip;</p>
+        <p class="loading-step__sub">Just a moment while I work out your result.</p>
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <!-- ── NAVIGATION (shown on Q1–Q7) ── -->
+    <div class="quiz-nav" id="quizNav" style="display:none;">
+      <button class="btn-back" id="btnBack" onclick="goBack()">&#8592; Back</button>
+      <button class="btn-next" id="btnNext" onclick="goNext()" disabled>Next &rarr;</button>
+    </div>
+
+  </div><!-- /quiz-body -->
+
+  <script>
+    // ── RESULT URLs ──
+    const RESULT_URLS = {
+      audience: 'https://yourwebtoolkit.com/lead-magnet-diagnostic-result-wrong-audience/',
+      format:   'https://yourwebtoolkit.com/lead-magnet-diagnostic-result-format/',
+      offer:    'https://yourwebtoolkit.com/lead-magnet-diagnostic-result-offer/',
+      followup: 'https://yourwebtoolkit.com/lead-magnet-diagnostic-result-followup/'
+    };
+
+    // ── SCORING MAP ──
+    // Each answer maps to a result category (null = positive signal, no points)
+    const SCORING = {
+      1: { A: 'offer',    B: 'audience', C: 'audience', D: 'followup'  },
+      2: { A: null,       B: 'offer',    C: 'audience', D: 'offer'     },
+      3: { A: 'format',   B: 'format',   C: null,       D: null        },
+      4: { A: null,       B: 'followup', C: 'followup', D: 'followup'  },
+      5: { A: 'offer',    B: 'audience', C: 'followup', D: 'offer'     },
+      6: { A: 'followup', B: 'audience', C: 'followup', D: 'audience'  },
+      7: { A: null,       B: 'followup', C: 'followup', D: 'offer'     }
+    };
+
+    const TOTAL_QUESTIONS = 7;
+
+    // ── STATE ──
+    const answers = {};
+    let currentStep = 0;
+
+    // ── PROGRESS BAR ──
+    function updateProgress(step) {
+      const pct = step === 0 ? 0 : Math.round(((step - 1) / TOTAL_QUESTIONS) * 100);
+      document.getElementById('progressBar').style.width = pct + '%';
+    }
+
+    // ── SHOW STEP ──
+    function showStep(id) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById('step-' + id);
+      if (el) el.classList.add('active');
+
+      window.scrollTo(0, 0);
+      try { window.top.scrollTo(0, 0); } catch(e) {}
+
+      const nav    = document.getElementById('quizNav');
+      const btnBack = document.getElementById('btnBack');
+      const btnNext = document.getElementById('btnNext');
+
+      if (typeof id === 'number' && id >= 1 && id <= TOTAL_QUESTIONS) {
+        nav.style.display = 'flex';
+        btnBack.style.visibility = id === 1 ? 'hidden' : 'visible';
+        btnNext.disabled = !answers[id];
+        btnNext.textContent = id === TOTAL_QUESTIONS ? 'See my result \u2192' : 'Next \u2192';
+        updateProgress(id);
+      } else {
+        nav.style.display = 'none';
+        updateProgress(id === 0 ? 0 : TOTAL_QUESTIONS);
+      }
+    }
+
+    // ── START QUIZ (validate opt-in) ──
+    function startQuiz() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const email     = document.getElementById('emailInput').value.trim();
+      const emailRe   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      let valid = true;
+
+      const fnInput = document.getElementById('firstName');
+      const emInput = document.getElementById('emailInput');
+      const fnErr   = document.getElementById('firstNameError');
+      const emErr   = document.getElementById('emailError');
+
+      if (!firstName) {
+        fnInput.classList.add('error'); fnErr.style.display = 'block'; valid = false;
+      } else {
+        fnInput.classList.remove('error'); fnErr.style.display = 'none';
+      }
+
+      if (!email || !emailRe.test(email)) {
+        emInput.classList.add('error'); emErr.style.display = 'block'; valid = false;
+      } else {
+        emInput.classList.remove('error'); emErr.style.display = 'none';
+      }
+
+      if (!valid) return;
+
+      // ── Wire up your GHL / email endpoint here ──
+      // fetch('YOUR_GHL_FORM_ENDPOINT', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ firstName, email }) });
+
+      currentStep = 1;
+      showStep(1);
+    }
+
+    // ── SELECT ANSWER ──
+    function selectAnswer(questionNum, letter, btn) {
+      btn.closest('.answers').querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      answers[questionNum] = letter;
+      document.getElementById('btnNext').disabled = false;
+    }
+
+    // ── NEXT ──
+    function goNext() {
+      if (!answers[currentStep]) return;
+      if (currentStep < TOTAL_QUESTIONS) {
+        currentStep++;
+        showStep(currentStep);
+        restoreSelection(currentStep);
+      } else {
+        showResult();
+      }
+    }
+
+    // ── BACK ──
+    function goBack() {
+      if (currentStep <= 1) return;
+      currentStep--;
+      showStep(currentStep);
+      restoreSelection(currentStep);
+    }
+
+    // ── RESTORE HIGHLIGHT when navigating back/forward ──
+    function restoreSelection(step) {
+      const saved = answers[step];
+      if (!saved) return;
+      const stepEl = document.getElementById('step-' + step);
+      stepEl.querySelectorAll('.answer-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        const letter = btn.querySelector('.answer-letter');
+        if (letter && letter.textContent.trim() === saved) {
+          btn.classList.add('selected');
+        }
+      });
+    }
+
+    // ── CALCULATE RESULT & REDIRECT ──
+    function showResult() {
+      document.getElementById('quizNav').style.display = 'none';
+      showStep('loading');
+      document.getElementById('progressBar').style.width = '100%';
+
+      // Tally scores
+      const scores = { audience: 0, format: 0, offer: 0, followup: 0 };
+      for (let q = 1; q <= TOTAL_QUESTIONS; q++) {
+        const category = SCORING[q] && SCORING[q][answers[q]];
+        if (category) scores[category]++;
+      }
+
+      // Find the winner
+      const max = Math.max(...Object.values(scores));
+      const winners = Object.keys(scores).filter(k => scores[k] === max);
+
+      let result;
+      if (winners.length === 1) {
+        result = winners[0];
+      } else if (winners.includes('followup') && winners.includes('offer')) {
+        // Tie-breaker: offer vs follow-up → default to follow-up
+        result = 'followup';
+      } else {
+        result = winners[0];
+      }
+
+      const email     = document.getElementById('emailInput').value.trim();
+      const firstName = document.getElementById('firstName').value.trim();
+      const finalUrl  = RESULT_URLS[result];
+
+      // Populate the hidden GHL field
+      document.getElementById('quizResultField').value = result;
+
+      // ── Submit to GHL via hidden iframe (avoids CORS block) ──
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.name = 'ghl-submit-frame';
+      document.body.appendChild(iframe);
+
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://backend.leadconnectorhq.com/forms/submit';
+      form.target = 'ghl-submit-frame';
+
+      const fields = {
+        formId:    '61VmdCpEg3vknMlAAekx',
+        locationId: 'Jd8wve9Ohut8BGtETOCw',
+        firstName,
+        email,
+        'lead-magnet-diagnostic-result': result
+      };
+
+      Object.entries(fields).forEach(([key, val]) => {
+        const input = document.createElement('input');
+        input.type  = 'hidden';
+        input.name  = key;
+        input.value = val;
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      form.submit();
+
+      // Redirect after giving GHL a moment to receive the submission
+      setTimeout(() => {
+        try { window.top.location.href = finalUrl; }
+        catch(e) { window.location.href = finalUrl; }
+      }, 1000);
+    }
+
+    // ── DYNAMIC HEIGHT: notify parent iframe to resize ──
+    function notifyHeight() {
+      const height = document.body.scrollHeight;
+      try {
+        window.parent.postMessage({ type: 'quizHeight', height }, '*');
+      } catch(e) {}
+    }
+
+    // Fire on load and whenever the DOM changes
+    window.addEventListener('load', notifyHeight);
+    new MutationObserver(notifyHeight).observe(document.body, {
+      subtree: true, childList: true, attributes: true
+    });
+  </script>
+
+</body>
+</html>
